@@ -7,7 +7,11 @@
 #  * Device Tree by Romeo13card-sys
 #  * Ported to R12 by Martyr_
 #  == == == == == == == == == == == == ==
-
+#  Note: This device tree alone will NOT give you the
+#  same exact result as the Release builds!
+#
+#  There are numerous amounts of modifications within the OrangeFox
+#  Source Code that includes tweaks and fixes (e.g: Flashlight Toggle)
 DEVICE_PATH := device/xiaomi/fog
 
 # Architecture
@@ -78,11 +82,12 @@ BOARD_KERNEL_CMDLINE += msm_rtb.filter=0x237
 BOARD_KERNEL_CMDLINE += service_locator.enable=1
 BOARD_KERNEL_CMDLINE += swiotlb=2048
 
-# Target Kernel
-TARGET_KERNEL_ARCH := arm64
-TARGET_KERNEL_CONFIG := vendor/fog-perf_defconfig
-TARGET_KERNEL_HEADERS := kernel/xiaomi/fog
-TARGET_KERNEL_SOURCE := kernel/xiaomi/fog
+# // Target Kernel
+# TARGET_KERNEL_ARCH := arm64
+# TARGET_KERNEL_CONFIG := vendor/fog-perf_defconfig
+# TARGET_KERNEL_HEADERS := kernel/xiaomi/fog
+# TARGET_KERNEL_SOURCE := kernel/xiaomi/fog
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/kernel/V14.0.9.0.TGEMIXM_13.0-Kernel.gz
 BOARD_RAMDISK_USE_LZ4 := true
 
 # Metadata

@@ -19,6 +19,11 @@
 #  * Device Tree by Romeo13card-sys
 #  * Ported to R12 by Martyr_
 #  == == == == == == == == == == == == ==
+#  Note: This device tree alone will NOT give you the
+#  same exact result as the Release builds!
+#
+#  There are numerous amounts of modifications within the OrangeFox
+#  Source Code that includes tweaks and fixes (e.g: Flashlight Toggle)
 FDEVICE="fog"
 fox_get_target_device() {
 local chkdev=$(echo "$BASH_SOURCE" | grep -w $FDEVICE)
@@ -36,8 +41,6 @@ fi
 if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_TARGET_DEVICES="fog,rain,wind"
 	export TARGET_DEVICE_ALT="fog"
-	export FOX_ENABLE_APP_MANAGER=1
-	export FOX_DELETE_AROMAFM=1
 	export FOX_USE_BASH_SHELL=1
 	export FOX_USE_NANO_EDITOR=1
 	export FOX_USE_TAR_BINARY=1
@@ -49,22 +52,28 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
 	export OF_USE_MAGISKBOOT_FOR_ALL_PATCHES=1
 	export OF_NO_MIUI_PATCH_WARNING=1
-	export OF_DONT_PATCH_ENCRYPTED_DEVICE=1
 	export OF_NO_TREBLE_COMPATIBILITY_CHECK=1
 	export FOX_BUILD_TYPE="Unofficial"
-	export FOX_VARIANT="Custom"
+	export FOX_VARIANT="Kitsune"
 	export OF_MAINTAINER="Martyr_"
 	export FOX_VIRTUAL_AB_DEVICE=1
 	export OF_ADVANCED_SECURITY=1
-	export FOX_USE_MISANS_FONTS=1
 
-    # screen settings
+	# Addons/Extras
+	export FOX_ENABLE_APP_MANAGER=1
+	export FOX_DELETE_AROMAFM=1
+	export OF_ENABLE_FRP_ADDON=1
+    export FOX_USE_MISANS_FONTS=1
+    export FOX_USE_UPDATED_MAGISKBOOT=1
+	export OF_DONT_PATCH_ENCRYPTED_DEVICE=0
+
+    # Screen Settings
 	export OF_SCREEN_H=2400
+	export OF_SCREEN_W=720
 	export OF_STATUS_H=90
 	export OF_STATUS_INDENT_LEFT=74
 	export OF_STATUS_INDENT_RIGHT=60
   	export OF_HIDE_NOTCH=1
-	export OF_CLOCK_POS=1
 	export OF_ALLOW_DISABLE_NAVBAR=1
 
     # maximum permissible splash image size (in kilobytes); do *NOT* increase!
@@ -78,22 +87,20 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
   	   export | grep "TW_" >> $FOX_BUILD_LOG_FILE
  	fi
 
- 	# // I've been trying for hours and i can't just get
- 	# // this god damn Flashlight to work. Maybe some day.
- 	export OF_FLASHLIGHT_ENABLE=0
+ 	# == Flashlight ==
+ 	# 99% of Custom Roms don't expose the flashlight path
+	# in recovery, so this pretty much only works under stock MIUI...
+    export OF_FLASHLIGHT_ENABLE=1
+    export OF_FL_PATH1="/sys/class/leds/led:torch"
+    export OF_FL_PATH2=""
 
-	# flashlight settings (verified via ADB)
-	# export OF_FLASHLIGHT_PATH="/sys/class/leds/led:torch/brightness"
-	# export OF_USE_FLASHLIGHT_BRIGHTNESS=1
-
-	# clock settings
+	# Clock settings
 	export OF_CLOCK_AM_PM=1
-	export OF_USE_CLOCK_SECONDS=1
+	export OF_USE_CLOCK_SECONDS=0
+	export OF_CLOCK_POS=1
 
 	# enable adb during zip installation
 	export OF_ADB_AFTER_ZIP=1
-
-	# // Reduce size just cuz
 	export OF_USE_LZMA_COMPRESSION=1
 else
 	if [ -z "$FOX_BUILD_DEVICE" -a -z "$BASH_SOURCE" ]; then
@@ -102,5 +109,4 @@ else
 fi
 
 # Clone kernel tree
-# Alternoegra's Kernel Tree was causing issues.
 git clone --depth=1 https://github.com/r0ddty/kernel_xiaomi_fog kernel/xiaomi/fog
